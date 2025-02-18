@@ -13,7 +13,7 @@ public class DesktopApplication extends Application {
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader =
                 new FXMLLoader(DesktopApplication.class
-                        .getResource("hello-view.fxml"));
+                        .getResource("main-page.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 800, 600);
 
         DatabaseManager dbManager = new DatabaseManager();

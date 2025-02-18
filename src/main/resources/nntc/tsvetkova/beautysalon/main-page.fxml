@@ -56,7 +56,7 @@
             <TextField fx:id="fieldName" />
             <Button mnemonicParsing="false" onAction="#addRow" text="Добавить" />
             <Button mnemonicParsing="false" onAction="#editRow" text="Изменить" />
-            <Button mnemonicParsing="false" onAction="#deleteRow" prefHeight="27.0" prefWidth="73.0" text="Удалить" />
+            <Button mnemonicParsing="false" onAction="#deleteRow" prefHeight="50.0" prefWidth="50.0" text="Удалить" />
          </children>
       </HBox>
    </children>

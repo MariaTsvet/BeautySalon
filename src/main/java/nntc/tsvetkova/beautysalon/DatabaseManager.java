@@ -106,6 +106,20 @@ public class DatabaseManager {
         }
     }
 
+    //delete data
+    public void deleteData(int id) {
+        String query = String.format("DELETE FROM %s WHERE id=%d", TABLE_NAME, id);
+
+        try (var preparedStatement = connection.prepareStatement(query)) {
+            int rowsDeleted = preparedStatement.executeUpdate();
+            System.out.println("Удалено строк: " + rowsDeleted);
+        }catch (SQLException e) {
+            System.out.println("Ошибка при удалении данных: " + e.getMessage());
+            Platform.runLater(() -> ErrorDialog.showError("Ошибка при удалении данных: ", e.getMessage()));
+
+        }
+    }
+
 
 
 
