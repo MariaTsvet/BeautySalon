@@ -44,75 +44,65 @@ public class DesktopController {
         if (primaryStage != null && showCloseConfirmationDialog()){
             primaryDatabaseManager.disconnect();
             primaryStage.close();
+        }else {
+            System.out.println("Пользователь отменил закрытие.");
         }
     }
     private boolean showCloseConfirmationDialog(){
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Confirmation");
-        alert.setHeaderText("Are you sure?");
+        alert.setTitle("Подтверждение закрытия");
+        alert.setHeaderText("Вы уверены, что хотите выйти?");
+        alert.setContentText("Все несохраненные данные будут потеряны.");
         Optional <ButtonType> result = alert.showAndWait();
         return result.isPresent() && result.get() == ButtonType.OK;
     }
 
-    private boolean showConfirmationDialog(String message){
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Confirmation");
-        alert.setHeaderText(message);
-        alert.setContentText("Все несохраненныке данные будут потеряны");
+    public void showLoginWindow() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("login-view.fxml"));
+        VBox infoContent = fxmlLoader.load();
 
-        Optional <ButtonType> result = alert.showAndWait();
-        return result.isPresent() && result.get() == ButtonType.OK;
+        Dialog<Void> dialog = new Dialog<>();
+        dialog.setTitle("Настройки доступа к СУБД");
+        dialog.getDialogPane().setContent(infoContent);
+        Stage stageLogin = (Stage) dialog.getDialogPane().getScene().getWindow();
+
+        stageLogin.setOnCloseRequest(event -> {
+            System.out.println("Закрытие окна настроек доступа к СУБД...");
+            dialog.close(); // Закрыть диалог
+        });
+
+        dialog.showAndWait();
     }
 
-    public void updateTable(){
-        tableView.setItems(primaryDatabaseManager.fetchData());
+//    public void showServicesWindow(ActionEvent actionEvent) throws IOException {
+//        // Загружаем FXML файл для окна справки
+//        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("services-view.fxml"));
+//
+//        VBox infoContent = fxmlLoader.load(); // Загружаем содержимое окна справки
+//
+//        ServicesController controller = fxmlLoader.getController();
+//        controller.setPrimaryDatabaseManager(primaryDatabaseManager);
+//
+//        // Создаем диалоговое окно
+//        Dialog<Void> dialog = new Dialog<>();
+//        dialog.setTitle("Управление услугами");
+//
+//        dialog.getDialogPane().setContent(infoContent); // Добавляем содержимое в диалоговое окно
+//
+//        Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
+//
+//
+//
+//        // Обработчик закрытия окна
+//        stage.setOnCloseRequest(event -> {
+//            System.out.println("Закрытие окна с услугами...");
+//            dialog.close(); // Закрыть диалог
+//        });
+//
+//        // Показываем диалог в модальном режиме
+//        dialog.showAndWait();
+//    }
 
-        idColumn.setCellValueFactory(new PropertyValueFactory<User, Integer>("id"));
-        nameColumn.setCellValueFactory(new PropertyValueFactory<User, String>("name"));
-
-        cleanupFields(); //очистка полей после кажлого обновления таб
-
-        System.out.println("Вызван метод updateTable");
-    }
-
-    @FXML
-    public void addRow(){
-        //добавление данных в бд
-        primaryDatabaseManager.insertData(Integer.parseInt(fieldID.getText()), fieldName.getText());
-        updateTable();
-        System.out.println("Вызван метод addRow");
-    }
-
-    @FXML
-    public void editRow(){
-        //добавление данных в бд
-        primaryDatabaseManager.updateData(Integer.parseInt(fieldID.getText()), fieldName.getText());
-        updateTable();
-        System.out.println("Вызван метод editRow");
-    }
-
-    @FXML
-    public void deleteRow(){
-        if(showConfirmationDialog(String.format("Действительно удалить запись %s c ID=%s ",
-                fieldName.getText(),fieldID.getText()))
-        ){
-            //Удаление данных из бд
-            primaryDatabaseManager.deleteData(Integer.parseInt(fieldID.getText()));
-            updateTable();
-            System.out.println("Вызван метод deleteRow");
-        }
-    }
-
-    @FXML
-    public void onRowClick(MouseEvent event){
-        if (event.getClickCount() == 1){
-            User selectedUser = tableView.getSelectionModel().getSelectedItem();
-            if (selectedUser != null) {
-                fieldID.setText(String.format("%d", selectedUser.getId()));
-                fieldName.setText(selectedUser.getName());
-            }
-        }
-    }
 
     public void showInfoWindow() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("info-view.fxml"));
