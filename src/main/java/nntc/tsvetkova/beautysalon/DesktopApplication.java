@@ -52,7 +52,7 @@ public class DesktopApplication extends Application {
         dbManager.connect();
         dbManager.ensureTablesExists();
 
-        FXMLLoader fxmlLoader = new FXMLLoader(DesktopApplication.class.getResource("main-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(DesktopApplication.class.getResource("main-page.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 320, 240);
 
         // Получаем контроллер и передаем Stage
@@ -63,6 +63,18 @@ public class DesktopApplication extends Application {
 
         // Получаем настройки
         Preferences prefs = Preferences.userNodeForPackage(DesktopApplication.class);
+
+        // Загружаем сохраненные параметры окна
+        double x = prefs.getDouble("windowX", 100); // Значение по умолчанию - 100
+        double y = prefs.getDouble("windowY", 100);
+        double width = prefs.getDouble("windowWidth", 600);
+        double height = prefs.getDouble("windowHeight", 400);
+
+        // Устанавливаем размеры и положение окна
+        stage.setX(x);
+        stage.setY(y);
+        stage.setWidth(width);
+        stage.setHeight(height);
 
         stage.setMinWidth(MIN_WIDTH);
         stage.setMinHeight(MIN_HEIGHT);

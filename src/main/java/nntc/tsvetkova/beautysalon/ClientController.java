@@ -50,7 +50,7 @@ public class ClientController {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Подтверждение действия");
         alert.setHeaderText(message);
-        // alert.setContentText("Все несохраненные данные будут потеряны.");
+        alert.setContentText("Все несохраненные данные будут потеряны.");
 
         // Ожидание ответа пользователя
         Optional<ButtonType> result = alert.showAndWait();
@@ -68,7 +68,7 @@ public class ClientController {
 
     @FXML
     public void addRow() {
-        primaryDatabaseManager.clientsInsertData(fieldName.getText(), fieldEmail.getText().trim());
+        primaryDatabaseManager.clientInsertData(fieldName.getText(), fieldEmail.getText().trim());
         updateTable();
         fieldID.clear();
         fieldName.clear();
@@ -77,7 +77,7 @@ public class ClientController {
 
     @FXML
     public void editRow() {
-        primaryDatabaseManager.clientsUpdateData(Integer.parseInt(fieldID.getText()), fieldName.getText(), fieldEmail.getText().trim());
+        primaryDatabaseManager.clientUpdateData(Integer.parseInt(fieldID.getText()), fieldName.getText(), fieldEmail.getText().trim());
         updateTable();
         fieldID.clear();
         fieldName.clear();
@@ -87,7 +87,7 @@ public class ClientController {
     @FXML
     public void deleteRow() {
         if (showConfirmationDialog(String.format("Действительно удалить запись %s с ID=%s и электропочтой %s?", fieldName.getText(), fieldID.getText(), fieldEmail.getText()))) {
-            primaryDatabaseManager.clientsDeleteData(Integer.parseInt(fieldID.getText()));
+            primaryDatabaseManager.clientDeleteData(Integer.parseInt(fieldID.getText()));
             updateTable();
             fieldID.clear();
             fieldName.clear();

@@ -11,23 +11,9 @@ import javafx.scene.input.MouseEvent;
 
 import java.io.IOException;
 import java.util.Optional;
+import java.util.prefs.Preferences;
 
 public class DesktopController {
-
-    @FXML
-    private TableView<User> tableView;
-
-    @FXML
-    private TableColumn<User, Integer> idColumn;
-
-    @FXML
-    private TableColumn<User, String> nameColumn;
-
-    @FXML
-    public TextField fieldID;
-
-    @FXML
-    public TextField fieldName;
 
     private Stage primaryStage;
     private DatabaseManager primaryDatabaseManager;
@@ -41,11 +27,27 @@ public class DesktopController {
     }
 
     public void handleMenuClose(ActionEvent event){
-        if (primaryStage != null && showCloseConfirmationDialog()){
-            primaryDatabaseManager.disconnect();
-            primaryStage.close();
-        }else {
-            System.out.println("Пользователь отменил закрытие.");
+        if (primaryStage != null) {
+            boolean shouldClose = showCloseConfirmationDialog();
+            if (shouldClose) {
+                System.out.println("Пользователь подтвердил закрытие. Окно будет закрыто.");
+                // Получаем настройки
+                Preferences prefs = Preferences.userNodeForPackage(DesktopApplication.class);
+                prefs.putDouble("windowX", primaryStage.getX());
+                prefs.putDouble("windowY", primaryStage.getY());
+                prefs.putDouble("windowWidth", primaryStage.getWidth());
+                prefs.putDouble("windowHeight", primaryStage.getHeight());
+
+                if (primaryDatabaseManager != null) {
+                    this.primaryDatabaseManager.disconnect();
+                }
+
+                primaryStage.close(); // Закрытие окна
+            } else {
+                System.out.println("Пользователь отменил закрытие.");
+            }
+        } else {
+            System.err.println("Stage не был установлен!");
         }
     }
     private boolean showCloseConfirmationDialog(){
@@ -58,7 +60,7 @@ public class DesktopController {
     }
 
     public void showLoginWindow() throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("login-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("login.fxml"));
         VBox infoContent = fxmlLoader.load();
 
         Dialog<Void> dialog = new Dialog<>();
@@ -68,7 +70,7 @@ public class DesktopController {
 
         stageLogin.setOnCloseRequest(event -> {
             System.out.println("Закрытие окна настроек доступа к СУБД...");
-            dialog.close(); // Закрыть диалог
+            dialog.close();
         });
 
         dialog.showAndWait();
@@ -104,26 +106,26 @@ public class DesktopController {
 //    }
 
 
-    public void showInfoWindow() throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("info-view.fxml"));
-        VBox infoContent = fxmlLoader.load();
-        Dialog<Void> dialog = new Dialog<>();
-       dialog.setTitle("О программе");
-        dialog.getDialogPane().setContent(infoContent);
-
-        Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
-
-        stage.setOnCloseRequest(event ->{
-           dialog.close();
-        });
-
-        dialog.showAndWait();
-    }
-
-    private void cleanupFields() {
-        fieldID.clear();
-        fieldName.clear();
-    }
+//    public void showInfoWindow() throws IOException {
+//        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("info-view.fxml"));
+//        VBox infoContent = fxmlLoader.load();
+//        Dialog<Void> dialog = new Dialog<>();
+//       dialog.setTitle("О программе");
+//        dialog.getDialogPane().setContent(infoContent);
+//
+//        Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
+//
+//        stage.setOnCloseRequest(event ->{
+//           dialog.close();
+//        });
+//
+//        dialog.showAndWait();
+//    }
+//
+//    private void cleanupFields() {
+//        fieldID.clear();
+//        fieldName.clear();
+//    }
 
 
 }

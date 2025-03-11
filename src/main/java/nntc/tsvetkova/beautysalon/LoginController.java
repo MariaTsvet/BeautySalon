@@ -48,6 +48,8 @@ public class LoginController {
         prefs.put("subdUser", subdUser.getText());
         prefs.put("subdPassword", subdPassword.getText());
 
+        System.out.println(prefs);
+
         // формируем информационное сообщение
         Alert a = new Alert(Alert.AlertType.INFORMATION);
         a.setTitle("Перезапустите приложение!");
